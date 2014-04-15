@@ -6,12 +6,13 @@ body {
 	margin: 0px 0px 0px 0px;
 }
 body * {
-	margin: 0px; 
+	margin-left: 0px; 
 	padding: 0px;
 }
 img {
 	border: none;
 	background: none;
+	margin-left: 40px;
 }
 hr {
 	height: 5px;
@@ -98,6 +99,7 @@ h3 {
 h3 a, h3 a:visited {
 	color: #FFF;
 	text-decoration: none;
+	margin-left: 30px;
 }
 #sidebar h2 {
 	margin: 0px; padding: 5px 0px;
@@ -293,14 +295,14 @@ h6 {
 	display: block;
 	}
 #content p{
-	margin: 0px;
+	margin-left: 20px;
 	line-height: 18px;
-	padding: 0px 0px 10px 0px;
+	padding: 0px 0px 10px 20px;
 	font-size: 13px;
 	}
 #content p img{
 	border: none;
-	padding: 0px 5px 15px 0px;
+	padding: 0px 5px 15px 20px;
 	}
 #content ol {
 	list-style-type: decimal;
@@ -711,6 +713,10 @@ margin: 0px;
 /*************************************
 	Misc
 **************************************/
+.indentedPara {
+	margin-left: 30px;
+	}
+
 .alignright { 
 	float: right;
 	}
