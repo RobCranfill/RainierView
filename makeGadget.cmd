@@ -5,6 +5,6 @@ cd RainierView.files
 "C:\Program Files\7-Zip\7z" a -tzip ..\RainierView *
 cd ..
 
-erase                     RainierView.last.gadget
-rename RainierView.gadget RainierView.last.gadget
-rename RainierView.zip    RainierView.gadget
+erase                         RainierView-1.0.last.gadget
+rename RainierView-1.0.gadget RainierView-1.0.last.gadget
+rename RainierView.zip        RainierView-1.0.gadget
