@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<gadget>
+  <name>Rainier View</name>
+  <version>2.0.0.0</version>
+  <author name="rob cranfill">
+    <info
+      url="http://www.nps.gov/mora/photosmultimedia/webcams.htm"
+      text="Webcam info"
+      />
+    <logo src="images/RainierViewLogo.png"/>
+  </author>
+  <copyright>&#169; 2014</copyright>
+  <description>
+Live webcam from 10,000 feet on Mount Rainier.
+
+This gadget and its author are not affiliated with or endorsed by Mount Rainier National Park - or anyone else. :)
+
+This gadget may be distributed freely, for free.
+    </description>
+   <icons>
+    <icon height="64" width="64" src="images/RainierViewIcon.png"/>
+   </icons>
+  <hosts>
+    <host name="sidebar">
+      <base type="HTML" apiVersion="1.0.0" src="RainierView.html" />
+      <permissions>Full</permissions>
+      <platform minPlatformVersion="1.0" />
+    </host>
+  </hosts>
+</gadget>
