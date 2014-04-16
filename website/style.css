@@ -716,6 +716,9 @@ margin: 0px;
 .indentedPara {
 	margin-left: 30px;
 	}
+.wayIndentedPara {
+	margin-left: 60px;
+	}
 
 .alignright { 
 	float: right;

@@ -15,5 +15,14 @@ A link is provided to the web site of my climbing club, OSAT, which is an awesom
 but I am not implying any endorsement of this software by OSAT or any other connection between me and them. :)
 
 
+References
+----------
+Gadgets
+* http://msdn.microsoft.com/en-us/library/windows/desktop/bb456468%28v=vs.85%29.aspx
+* http://msdn.microsoft.com/en-us/library/windows/desktop/ff486364%28v=vs.85%29.aspx
+
+Mt. Rainier Webcams
+* http://www.nps.gov/mora/photosmultimedia/webcams.htm
+
 /Rob
 
