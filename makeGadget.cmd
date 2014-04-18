@@ -1,5 +1,5 @@
-@REM @echo off
-@rem batch file to create gadget file from folder
+@echo off
+rem batch file to create gadget file from folder
 
 cd RainierView.build
 "C:\Program Files\7-Zip\7z" a -tzip ..\RainierView *
