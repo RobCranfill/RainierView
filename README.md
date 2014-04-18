@@ -14,6 +14,8 @@ This project is free to use, re-distribute, re-use, whatever - as long as you do
 A link is provided to the web site of the climbing club I belong to, [OSAT](http://osat.org/), which is an awesome organization, 
 but I am not implying any endorsement of this software by OSAT or any other connection between me and them. :)
 
+This is my ['product page'](http://robcranfill.net/RainierView) for this thing.
+
 
 References
 ----------
