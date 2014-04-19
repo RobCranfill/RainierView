@@ -4,10 +4,7 @@
 var KEY_MUIR     = "show_muir";
 var KEY_PARADISE = "show_paradise";
 var KEY_BOTH     = "show_both";
-
 var GROUP_NAME = "Options";
-
-var mainSettingsClosing_;
 
 
 // This method is called when the dialog loads.

@@ -149,13 +149,6 @@ function loadSettings()
 	}
 
 
-function saveSettings()
-  {
-  // XXX - I don't think this is used anymore.
-  beepN(5);
-  }
-
-
 // Zoom in or out
 //
 function checkDockState()
@@ -176,13 +169,12 @@ function checkDockState()
   }
 
 
-
 // The settings script will call this after saving (possibly-new) settings.
 //
 function settingsHaveChanged()
 	{
 
-	//  TODO: could pass args in here, rather than reading the settings file again.
+	//  TODO: could pass args to this method, rather than reading the settings again? whatever.
 	loadSettings();
 
 	refreshView();
