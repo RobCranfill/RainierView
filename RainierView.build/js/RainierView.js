@@ -2,113 +2,157 @@
 // Javascript for RainierView.
 // rob cranfill, 2014
 
-// Default values; if this gadget has never run before, these values will be persisted.
-var imageURL_ = "http://www.nps.gov/webcams-mora/mountain.jpg";
-var refreshTimeSeconds_ = new Number(120);
+// These duplicate values in the settings.js file - merge??
+var GROUP_NAME   = "Options";
+var KEY_MUIR     = "show_muir";
+var KEY_PARADISE = "show_paradise";
+var KEY_BOTH     = "show_both";
 
-// TODO - These sizes are *multiplied* by the SCALE_X factors, but it would be nicer to have user-selectable divisors. 
+var imageURLMuir_ = "http://www.nps.gov/webcams-mora/muir.jpg";
+var imageURLPara_ = "http://www.nps.gov/webcams-mora/mountain.jpg";
+var imageURL_ = imageURLMuir_;
+
+var refreshTimeMuir_ = new Number(300);	// cam update is 10 minutes - this is half that
+var refreshTimePara_ = new Number(60);	// cam update is 2 minutes - this is half that
+var refreshTimeSeconds_ = refreshTimeMuir_;
+
+var refreshTimeFlip_ = new Number(30);
+var doFlipImages_ = false;
+var isMuir_ = false;
+
+// TODO - These sizes are *multiplied* by the SCALE_X factors, 
+//  but it would be nicer to have user-selectable *divisors*. 
 var IMAGE_W = 512
 var IMAGE_H = 384
 var SCALE_DOCKED   = 1;
-var SCALE_UNDOCKED = 2; // this is still just half the native size!
+var SCALE_UNDOCKED = 2;
 
-// These duplicate values in the settings.js file - fix??
-var KEY_URL = "URL";
-var KEY_REFRESH = "refreshSeconds";
-var GROUP_NAME = "Options";
+var refreshTimer_ = null;
 
-var timer_ = null;
+
+function pauseMillis(ms) 
+	{
+	ms += new Date().getTime();
+	while (new Date() < ms){}
+	} 
+
+function beepN(n)
+	{
+	pauseMillis(1000);
+	for (var i=0; i<n; i++)
+		{
+		System.Sound.beep();
+		pauseMillis(500);
+ 		}
+  }
+  
 
 // This is invoked on page load.
 //
 function loadMain()
-{
-
-  ahISeeYouHaveTheMachineThatGoesBING();
+	{
+	
+	// can't we specify this elsewhere? it's not dynamic...
+  System.Gadget.settingsUI = "RainierViewSettings.html";
 
   // Use the dock state method to set our size. TODO: persist this?
   System.Gadget.onDock   = checkDockState;
   System.Gadget.onUndock = checkDockState;
+
+// XXX - does this do anything in Win7? Keep for Vista?
   checkDockState();
 
   loadSettings();
 
-  // this is too often, but works.
-  saveSettings();
-
-  System.Gadget.settingsUI = "RainierViewSettings.html";
-
   refreshView();
 
-  // Start a time to call refreshView again.
+  // Start a timer to call refreshView again.
   runTimer(refreshTimeSeconds_, "refreshView()");
+
   }
 
 
 // (Re)display the image. Called periodically.
 //
-function refreshView() 
+function refreshView()
   {
   var pic = document.getElementById("viewPicture");
  
-  // Workaround for IE's refusing to reload the same URL: add fake param that changes on every refresh.
+	if (doFlipImages_)
+	  {
+	  if (isMuir_)
+		  {
+		 	imageURL_ = imageURLPara_;
+		 	refreshTimeSeconds_ = refreshTimePara_;
+		  }
+	  else
+		  {
+		  imageURL_ = imageURLMuir_;
+		  refreshTimeSeconds_ = refreshTimeMuir_;
+		  }
+		isMuir_ = !isMuir_;
+	  }
+
+  // Workaround for IE's refusal to reload the same URL: add fake param that changes on every refresh.
   pic.src = imageURL_ + "?foo=" + new Date().getTime();
-  
-  ahISeeYouHaveTheMachineThatGoesBING();
+
+	// Re-start timer with new refresh value
+  runTimer(refreshTimeFlip_, "refreshView()");
  
   }
 
 
 // Set a timer to call the given function in the indicated number of seconds.
-// Can be fractional and less than 1.0.
+// Can be fractional and less than 1.0 (significant to 3 decimals: millisecond resolution).
 //
 function runTimer(timeoutSec, functionToCall) 
   {
-  if (timer_ === null)
+  if (refreshTimer_ === null)
     {
     }
   else
     {
-    clearInterval(timer_);
+    clearInterval(refreshTimer_);
     }
   if (timeoutSec >= 0)
     {
-    timer_ = setInterval(functionToCall, timeoutSec * 1000);
+    refreshTimer_ = setInterval(functionToCall, timeoutSec * 1000);
     }
   }
 
 
 // Load settings to globals.
-// Sets imageURL_ and refreshTimeSeconds_
+// Sets imageURL_, refreshTimeSeconds_ and doFlipImages_.
 //
 function loadSettings()
   {
-  
   SettingsManager.loadFile();
 
-  var sURL = SettingsManager.getValue(GROUP_NAME, KEY_URL, "http://www.nps.gov/webcams-mora/mountain.jpg");
+	var optMuir = SettingsManager.getValue(GROUP_NAME, KEY_MUIR);
+	var optPara = SettingsManager.getValue(GROUP_NAME, KEY_PARADISE);
+	var optBoth = SettingsManager.getValue(GROUP_NAME, KEY_BOTH);
 
-  var sRefresh = SettingsManager.getValue(GROUP_NAME, KEY_REFRESH, "120");
-  if (sRefresh == "" || isNaN(sRefresh))
-    {
-    sRefresh = "240";	// a different value, for debugging purposes
-    }
-  else
-    {
-    refreshTimeSeconds_ = parseInt(sRefresh);
-    }
+	imageURL_ = imageURLMuir_;
+	refreshTimeSeconds_ = refreshTimeMuir_;
+  doFlipImages_ = false;
 
-  }
+	if (optPara === "Y")
+		{
+		imageURL_ = imageURLPara_;
+		refreshTimeSeconds_ = refreshTimePara_;
+		}
+	if (optBoth === "Y")
+		{
+		doFlipImages_ = true; // image and refresh time will begin set for Muir
+		isMuir_ = true;
+		}
+	}
 
 
 function saveSettings()
   {
-//  System.Gadget.Settings.writeString(KEY_URL,     imageURL_);
-//  System.Gadget.Settings.writeString(KEY_REFRESH, refreshTimeSeconds_.toString());
-
-  SettingsManager.setValue(GROUP_NAME, KEY_URL, imageURL_);
-  SettingsManager.setValue(GROUP_NAME, KEY_REFRESH, refreshTimeSeconds_.toString());
-  SettingsManager.saveFile();
+  // XXX - I don't think this is used anymore.
+  beepN(5);
   }
 
 
@@ -131,13 +175,18 @@ function checkDockState()
   System.Gadget.endTransition(System.Gadget.TransitionType.morph, 2);
   }
 
-// For debug - make a noise when we refresh.
-// I'd like it to be some distinctive sound, but all I can make work is the system beep.
+
+
+// The settings script will call this after saving (possibly-new) settings.
 //
-function ahISeeYouHaveTheMachineThatGoesBING()
-  {
-  // System.Sound.beep();
-  }
- 
- 
+function settingsHaveChanged()
+	{
+
+	//  TODO: could pass args in here, rather than reading the settings file again.
+	loadSettings();
+
+	refreshView();
+  runTimer(refreshTimeSeconds_, "refreshView()");
+  
+	}
 

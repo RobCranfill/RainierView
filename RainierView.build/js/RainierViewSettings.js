@@ -1,132 +1,89 @@
 // RainierViewSettings.js - rob cranfill 2014
 
-// These duplicate values in the main .js file - fix??
-var KEY_URL = "URL";
-var KEY_REFRESH = "refreshSeconds";
+// These duplicate values in the main .js file - merge??
+var KEY_MUIR     = "show_muir";
+var KEY_PARADISE = "show_paradise";
+var KEY_BOTH     = "show_both";
+
 var GROUP_NAME = "Options";
 
-var editMode_ = false;
+var mainSettingsClosing_;
 
-// This method (somewhat confusingly-named) is called when the dialog loads.
+
+// This method is called when the dialog loads.
 // 
 function loadSettings()
-  {
-  
-  SettingsManager.loadFile();
+	{
+	SettingsManager.loadFile();
 
-  System.Gadget.onSettingsClosing = settingsClosing;
+	System.Gadget.onSettingsClosing = gadgetSettingsClosing;
 
-  //var sURL = System.Gadget.Settings.readString(KEY_URL);
-  var sURL = SettingsManager.getValue(GROUP_NAME, KEY_URL);
-  if (sURL == "")	// shouldn't happen
-    {
-    sURL = "(unset!)";
-    }
-  var urlControl = document.getElementById("fieldURL");
-  urlControl.value = sURL;
+	var optMuir = SettingsManager.getValue(GROUP_NAME, KEY_MUIR);
+	var optPara = SettingsManager.getValue(GROUP_NAME, KEY_PARADISE);
+	var optBoth = SettingsManager.getValue(GROUP_NAME, KEY_BOTH);
 
-  // Disable until magic key is pressed.
-  fieldURL.disabled = true;
-  
-  //var sRefresh = System.Gadget.Settings.readString(KEY_REFRESH);
-  var sRefresh = SettingsManager.getValue(GROUP_NAME, KEY_REFRESH);
-  if (sRefresh == "")
-    {
-    sRefresh = "?";
-    }
-  else 
-    {
-    if (isNaN(sRefresh))
-      {
-      sRefresh = "'" + sRefresh + "'!";
-      }
-    else 
-      {
-      // saved value is seconds, we want user to manipulate minutes.
-      var minutes = parseInt(sRefresh) / 60;
-      sRefresh = minutes.toString();
-      }
-    }
-  var refreshControl = document.getElementById("fieldRefresh");
-  refreshControl.value = sRefresh;
+	var chkMuir = document.getElementById("muir");
+	var chkPara = document.getElementById("paradise");
+	var chkBoth = document.getElementById("both");
 
-  fieldRefresh.select(); // select this field for user input
-  
-  }
+	chkMuir.checked = false;
+	chkPara.checked = false;
+	chkBoth.checked = false;
 
+	if (optMuir === "Y")
+		{
+		chkMuir.checked = true;
+		}
+	else
+		{
+		if (optPara === "Y")
+			{
+			chkPara.checked = true;
+			}
+		else
+			{
+			chkBoth.checked = true;
+			}
+		}
 
-//
+	}
+	
+
 // Handle the Settings dialog closing event.
 // Parameters: event.
 //
-function settingsClosing(event)
-  {
-  // Save the settings if the user clicked OK.
-  if (event.closeAction == event.Action.commit)
-    {
-    var urlControl = document.getElementById("fieldURL");
-    var sURL = urlControl.value;
-    
-    var refreshControl = document.getElementById("fieldRefresh");
-    var nRefresh = parseInt(refreshControl.value) * 60;		// convert minutes to seconds
+function gadgetSettingsClosing(event)
+	{
+	// Save the settings if the user clicked OK.
+	if (event.closeAction == event.Action.commit)
+		{
+		var chkMuir = document.getElementById("muir");
+		var chkPara = document.getElementById("paradise");
+		var chkBoth = document.getElementById("both");
+		
+		var optMuir = "N";
+		var optPara = "N";
+		var optBoth = "N";
+		if (chkMuir.checked === true)
+			{
+			optMuir = "Y";
+			}
+		if (chkPara.checked === true)
+			{
+			optPara = "Y";
+			}
+		if (chkBoth.checked === true)
+			{
+			optBoth = "Y";
+			}
 
-    if (isValidURL(sURL) && isValidInteger(nRefresh))
-      {
-//      System.Gadget.Settings.writeString(KEY_URL,     sURL);
-//      System.Gadget.Settings.writeString(KEY_REFRESH, nRefresh.toString());
+		SettingsManager.setValue(GROUP_NAME, KEY_MUIR,     optMuir);
+		SettingsManager.setValue(GROUP_NAME, KEY_PARADISE, optPara);
+		SettingsManager.setValue(GROUP_NAME, KEY_BOTH,     optBoth);
+		SettingsManager.saveFile();
 
-      SettingsManager.setValue(GROUP_NAME, KEY_URL,     sURL);
-      SettingsManager.setValue(GROUP_NAME, KEY_REFRESH, nRefresh.toString());
-      SettingsManager.saveFile();
+		System.Gadget.document.parentWindow.settingsHaveChanged();
 
-      event.cancel = false;
-      }
-    else
-      {
-      event.cancel = true;
-      }
-    }
-  }
-
-
-// where does the magic 'event' param come from???
-function keyPressed()
-  {
-  switch(event.keyCode)
-    {
-    case 17:	// control key
-      editMode_ = !editMode_;
-      updateEditMode();
-      break;
-    }
-  }
-
-function updateEditMode()
-{
-  fieldURL.disabled = !editMode_;
-}
-
-// -------------------------------------------------
-// Allow a non-negative integer only. XXX TODO
-// Parameter: input string.
-// -------------------------------------------------
-function isValidInteger(sUserInput)
-  {
-  return true;
-  //var regexp = ^\d+$;
-  //return regexp.test(sUserInput);
-  }
-
-// -------------------------------------------------
-// Allow ... uh, whatever's a good URL. XXX TODO
-// Parameter: input string.
-// 
-// The following is a loose example that only allows 
-// alphanumerics, periods, dashes, and spaces.
-// -------------------------------------------------
-function isValidURL(sUserInput)
-  {
-  return true;
-  // var regexp = /[\.\w\-\\s]$/gi;
-  // return regexp.test(sUserInput);
-  }
+		event.cancel = false;
+		}
+	}
