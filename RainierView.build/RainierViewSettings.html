@@ -10,20 +10,35 @@
     <script type="text/javascript" src="js/SettingsManager.js"></script>
 </head>
 
-<body onload="loadSettings();" onkeydown="keyPressed();">
+<body onload="loadSettings()">
 
     <div id="settingsContent">
 
     <p>&copy;2014 Rob Cranfill</p>
 
-    <p>Select camera(s) to display:</p>
-	  <input type="radio" name="whichCam" id="muir">Camp Muir</input>
+    Select camera(s) to display:
 		<br/>
-		<input type="radio" name="whichCam" id="paradise">Paradise</input>
-		<br/>
-		<input type="radio" name="whichCam" id="both">Both</input>
 
+	  &nbsp;<input type="radio" name="whichCam" onclick="toggleWhich('M')" id="muir">Camp Muir</input>
 		<br/>
+
+		&nbsp;<input type="radio" name="whichCam" onclick="toggleWhich('P')" id="paradise">Paradise</input>
+		<br/>
+
+		&nbsp;<input type="radio" name="whichCam" onclick="toggleWhich('B')" id="both">Both</input>
+    <br />
+
+		&nbsp;&nbsp;&nbsp;&nbsp;<label id="lSwitch" for="fieldSwitchTime">Switch every</label>&nbsp;
+			<input
+				type="text"
+				id="fieldSwitchTime"
+				size="4"
+				maxlength="4"
+				title="How often to switch the images, in seconds."
+				onkeypress="return isNumberKey(event)"
+				/>
+			&nbsp;<label id="lSwitch2">seconds.</label>
+    <br />
 		<br/>
 
     <a href='http://robcranfill.net/RainierView'>Rainier View web site</a>

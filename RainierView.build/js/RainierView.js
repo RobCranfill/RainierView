@@ -7,6 +7,7 @@ var GROUP_NAME   = "Options";
 var KEY_MUIR     = "show_muir";
 var KEY_PARADISE = "show_paradise";
 var KEY_BOTH     = "show_both";
+var KEY_SWITCH   = "switch_time_seconds";
 
 var imageURLMuir_ = "http://www.nps.gov/webcams-mora/muir.jpg";
 var imageURLPara_ = "http://www.nps.gov/webcams-mora/mountain.jpg";
@@ -16,9 +17,10 @@ var refreshTimeMuir_ = new Number(300);	// cam update is 10 minutes - this is ha
 var refreshTimePara_ = new Number(60);	// cam update is 2 minutes - this is half that
 var refreshTimeSeconds_ = refreshTimeMuir_;
 
-var refreshTimeFlip_ = new Number(30);
 var doFlipImages_ = false;
 var isMuir_ = false;
+var flipTime_ = new Number(30);
+
 
 // TODO - These sizes are *multiplied* by the SCALE_X factors, 
 //  but it would be nicer to have user-selectable *divisors*. 
@@ -83,22 +85,25 @@ function refreshView()
 	  if (isMuir_)
 		  {
 		 	imageURL_ = imageURLPara_;
-		 	refreshTimeSeconds_ = refreshTimePara_;
 		  }
 	  else
 		  {
 		  imageURL_ = imageURLMuir_;
-		  refreshTimeSeconds_ = refreshTimeMuir_;
 		  }
 		isMuir_ = !isMuir_;
+
+		// Re-start timer with new refresh value
+	  runTimer(flipTime_, "refreshView()");
 	  }
+	else
+		{
+		runTimer(refreshTimeSeconds_, "refreshView()");
+		}
 
   // Workaround for IE's refusal to reload the same URL: add fake param that changes on every refresh.
+  //
   pic.src = imageURL_ + "?foo=" + new Date().getTime();
 
-	// Re-start timer with new refresh value
-  runTimer(refreshTimeFlip_, "refreshView()");
- 
   }
 
 
@@ -136,6 +141,8 @@ function loadSettings()
 	refreshTimeSeconds_ = refreshTimeMuir_;
   doFlipImages_ = false;
 
+	flipTime_ = SettingsManager.getValue(GROUP_NAME, KEY_SWITCH);
+
 	if (optPara === "Y")
 		{
 		imageURL_ = imageURLPara_;
@@ -170,15 +177,10 @@ function checkDockState()
 
 
 // The settings script will call this after saving (possibly-new) settings.
-//
+// TODO: could pass args to this method, rather than reading the settings again? whatever.
 function settingsHaveChanged()
 	{
-
-	//  TODO: could pass args to this method, rather than reading the settings again? whatever.
 	loadSettings();
-
-	refreshView();
-  runTimer(refreshTimeSeconds_, "refreshView()");
-  
+	refreshView();	// this will set the appropriate timer for refresh or flip.
 	}
 

@@ -2,30 +2,30 @@
   RainierViewSettings.css - rob cranfill, 2014
 */
 body
-{
-  margin:   0px;
-  width:  320px;
-  height: 220px;
-}
+	{
+	margin:   0px;
+	width:  320px;
+	height: 220px;
+	}
 
 p
-{
-  font-family:Tahoma;
-  font-size:small;
-}
+	{
+	font-family:Tahoma;
+	font-size:small;
+	}
 
 #settingsContent
-{
-  font-family:Tahoma;
-  font-size:x-small;
-}
+	{
+	font-family:Tahoma;
+	font-size:x-small;
+	}
 
 .inputValid
-{
-  color: Black;
-}
+	{
+	color: Black;
+	}
 
 .inputInvalid
-{
-  color: Red;
-}
+	{
+	color: Red;
+	}
